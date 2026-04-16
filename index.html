@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boston Data Hub · Civic Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --boston-red: #BC242A;
+      --boston-dark: #0D1117;
+      --boston-navy: #0E1F40;
+      --boston-gold: #D4A843;
+      --boston-sky: #4A90C4;
+      --surface: #F7F5F0;
+      --surface-card: #FFFFFF;
+      --text-primary: #0D1117;
+      --text-secondary: #5A5F6B;
+      --text-muted: #9099A8;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.15);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      background: var(--boston-dark);
+      border-bottom: 3px solid var(--boston-red);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-crest {
+      width: 36px;
+      height: 36px;
+      background: var(--boston-red);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: 'DM Serif Display', serif;
+      color: #fff;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 1px;
+    }
+
+    .header-badge {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2ECC71;
+      animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* ─── LAYOUT ─── */
+    .app-shell {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ─── SIDEBAR ─── */
+    aside {
+      background: var(--boston-dark);
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .sidebar-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      padding: 0 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .agent-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+      text-align: left;
+    }
+
+    .agent-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .agent-btn.active {
+      background: rgba(188, 36, 42, 0.18);
+      border-color: rgba(188, 36, 42, 0.4);
+    }
+
+    .agent-emoji {
+      font-size: 16px;
+      width: 22px;
+      text-align: center;
+    }
+
+    .agent-label {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .agent-desc {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 11px;
+      margin-top: 1px;
+      line-height: 1.3;
+    }
+
+    .sidebar-divider {
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      margin: 1.25rem 0;
+    }
+
+    .sidebar-info {
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-info p {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+      line-height: 1.5;
+    }
+
+    .sidebar-info a {
+      color: var(--boston-sky);
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    /* ─── MAIN CONTENT ─── */
+    main {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+
+    /* ─── HERO BANNER ─── */
+    .hero {
+      padding: 2.5rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .hero-agent-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(188, 36, 42, 0.07);
+      border: 1px solid rgba(188, 36, 42, 0.18);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--boston-red);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 560px;
+    }
+
+    /* ─── SUGGESTED PROMPTS ─── */
+    .suggestions-area {
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .suggestions-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .suggestions-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .suggestion-chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.12s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .suggestion-chip:hover {
+      background: var(--boston-red);
+      border-color: var(--boston-red);
+      color: #fff;
+    }
+
+    /* ─── CHAT AREA ─── */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      gap: 1rem;
+    }
+
+    .empty-state-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(188, 36, 42, 0.08);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .empty-state h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state p {
+      font-size: 13px;
+      max-width: 360px;
+    }
+
+    /* ─── MESSAGES ─── */
+    .message {
+      animation: msg-in 0.2s ease;
+    }
+
+    @keyframes msg-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg-user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .msg-user-bubble {
+      background: var(--boston-navy);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 16px 16px 4px 16px;
+      max-width: 72%;
+      font-size: 14px;
+      line-height: 1.55;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .msg-agent {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .agent-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(188, 36, 42, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      border: 1px solid rgba(188, 36, 42, 0.2);
+    }
+
+    .msg-agent-bubble {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+      padding: 14px 18px;
+      max-width: 84%;
+      font-size: 14px;
+      line-height: 1.65;
+      box-shadow: var(--shadow-sm);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg-agent-bubble strong {
+      font-weight: 600;
+    }
+
+    .msg-agent-bubble h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    /* ─── THINKING INDICATOR ─── */
+    .thinking-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .thinking-bubble {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      min-width: 280px;
+      max-width: 70%;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .thinking-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tool-call-log {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .tool-call-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      animation: msg-in 0.15s ease;
+    }
+
+    .tool-call-item .tool-icon {
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .tool-call-item .tool-name {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .tool-call-item .tool-detail {
+      color: var(--text-muted);
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .tool-call-item.done .tool-icon::after {
+      content: '✓';
+      color: #2ECC71;
+    }
+
+    .thinking-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .thinking-dots span {
+      width: 5px;
+      height: 5px;
+      background: var(--boston-red);
+      border-radius: 50%;
+      animation: dot-bounce 1.4s infinite;
+    }
+
+    .thinking-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .thinking-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dot-bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ─── INPUT BAR ─── */
+    .input-bar {
+      border-top: 1px solid var(--border);
+      background: #fff;
+      padding: 1rem 2.5rem 1.25rem;
+      position: sticky;
+      bottom: 0;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: var(--surface);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius);
+      padding: 8px 8px 8px 14px;
+      transition: border-color 0.15s;
+    }
+
+    .input-row:focus-within {
+      border-color: var(--boston-red);
+      box-shadow: 0 0 0 3px rgba(188, 36, 42, 0.08);
+    }
+
+    #question-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      color: var(--text-primary);
+      resize: none;
+      outline: none;
+      min-height: 22px;
+      max-height: 120px;
+      line-height: 1.5;
+      padding: 4px 0;
+    }
+
+    #question-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    #send-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--boston-red);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.12s;
+    }
+
+    #send-btn:hover {
+      background: #8B1A1E;
+    }
+
+    #send-btn:disabled {
+      background: var(--border-strong);
+      cursor: not-allowed;
+    }
+
+    #send-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .input-footer {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-footer-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .input-footer-note span {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ─── SETUP BANNER ─── */
+    .setup-banner {
+      margin: 1.5rem 2.5rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .setup-banner-header {
+      background: rgba(212, 168, 67, 0.1);
+      border-bottom: 1px solid rgba(212, 168, 67, 0.2);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #8B6A1A;
+    }
+
+    .setup-steps {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setup-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      background: var(--boston-red);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .step-code {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--boston-dark);
+      margin: 2px 0;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        display: none;
+      }
+
+      .hero,
+      .suggestions-area,
+      .chat-area,
+      .input-bar {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-crest">🏙️</div>
+    <div>
+      <div class="header-title">Boston Data Hub</div>
+      <div class="header-subtitle">Civic Intelligence Platform</div>
+    </div>
+    <div class="header-badge">
+      <div class="status-dot"></div>
+      Live · data.boston.gov
+    </div>
+  </header>
+
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="sidebar-section-label">Choose an Agent</div>
+
+      <button class="agent-btn active" data-agent="orchestrator" onclick="selectAgent(this)">
+        <span class="agent-emoji">🧠</span>
+        <div>
+          <div class="agent-label">General (Orchestrator)</div>
+          <div class="agent-desc">Ask any civic question</div>
+        </div>
+      </button>
+
+      <button class="agent-btn" data-agent="crime" onclick="selectAgent(this)">
+        <span class="agent-emoji">🚔</span>
+        <div>
+          <div class="agent-label">Crime & Safety</div>
+          <div class="agent-desc">Incidents by area and type</div>
+        </div>
+      </button>
+
+      <button class="agent-btn" data-agent="311" onclick="selectAgent(this)">
+        <span class="agent-emoji">📞</span>
+        <div>
+          <div class="agent-label">311 Service Requests</div>
+          <div class="agent-desc">Potholes, complaints, city services</div>
+        </div>
+      </button>
+
+      <button class="agent-btn" data-agent="housing" onclick="selectAgent(this)">
+        <span class="agent-emoji">🏠</span>
+        <div>
+          <div class="agent-label">Housing & Property</div>
+          <div class="agent-desc">Assessments and development</div>
+        </div>
+      </button>
+
+      <button class="agent-btn" data-agent="transit" onclick="selectAgent(this)">
+        <span class="agent-emoji">🚇</span>
+        <div>
+          <div class="agent-label">MBTA Transit</div>
+          <div class="agent-desc">Ridership and service data</div>
+        </div>
+      </button>
+
+      <button class="agent-btn" data-agent="permits" onclick="selectAgent(this)">
+        <span class="agent-emoji">🏗️</span>
+        <div>
+          <div class="agent-label">Building Permits</div>
+          <div class="agent-desc">Construction and development</div>
+        </div>
+      </button>
+
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-info">
+        <p>Data sourced from <a href="https://data.boston.gov" target="_blank">data.boston.gov</a> via Boston's official
+          MCP server.</p>
+        <br>
+        <p>Built by <a href="https://linkedin.com/in/jude-ighomena" target="_blank">Jude Ighomena</a> · iRaven Group UK
+        </p>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main>
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-agent-tag">
+          <span id="hero-emoji">🧠</span>
+          <span id="hero-agent-name">General Orchestrator</span>
+        </div>
+        <h1 id="hero-title">Ask Boston's data anything.</h1>
+        <p id="hero-desc">Get plain-English answers backed by live city data — crime stats, 311 complaints, property
+          values, MBTA ridership, and more.</p>
+      </div>
+
+      <!-- SUGGESTED PROMPTS -->
+      <div class="suggestions-area">
+        <div class="suggestions-label">Try asking</div>
+        <div class="suggestions-grid" id="suggestions-grid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- SETUP NOTICE (shown if backend not running) -->
+      <div class="setup-banner" id="setup-banner" style="display:none">
+        <div class="setup-banner-header">⚠️ Web server not detected — running in demo mode</div>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div class="step-text">Install Python dependencies:<br><span class="step-code">pip install anthropic
+                requests fastapi uvicorn</span></div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div class="step-text">Set your Anthropic API key:<br><span class="step-code">export
+                ANTHROPIC_API_KEY="sk-ant-..."</span></div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div class="step-text">Start the web server in the same folder:<br><span class="step-code">python
+                web_server.py</span></div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">4</div>
+            <div class="step-text">Refresh this page. Done! Or use the terminal script directly:<br><span
+                class="step-code">python boston_agents.py</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="chat-area" id="chat-area">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-state-icon">🗺️</div>
+          <h3>Your civic intelligence awaits</h3>
+          <p>Ask a question or pick a suggestion above. The agent will query live Boston open data and respond in plain
+            English.</p>
+        </div>
+      </div>
+
+      <!-- INPUT BAR -->
+      <div class="input-bar">
+        <div class="input-row">
+          <textarea id="question-input" rows="1"
+            placeholder="Ask about Boston data — crime, 311, housing, transit, permits..."></textarea>
+          <button id="send-btn" onclick="sendMessage()" title="Send (Enter)">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="8" y1="13" x2="8" y2="3" />
+              <polyline points="3,8 8,3 13,8" />
+            </svg>
+          </button>
+        </div>
+        <div class="input-footer">
+          <div class="input-footer-note">Active: <span id="footer-agent-name">General Orchestrator</span></div>
+          <div class="input-footer-note">Enter to send · Shift+Enter for new line</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8000';
+    let currentAgent = 'orchestrator';
+    let isThinking = false;
+
+    const agentMeta = {
+      orchestrator: {
+        name: 'General Orchestrator',
+        emoji: '🧠',
+        title: 'Ask Boston\'s data anything.',
+        desc: 'Get plain-English answers backed by live city data — crime stats, 311 complaints, property values, MBTA ridership, and more.',
+        suggestions: [
+          'What are the top 5 neighbourhoods with the most 311 complaints?',
+          'Which crime types are most common in Boston?',
+          'Where is the most construction happening in the city?',
+          'Show me the most valuable properties in Boston',
+        ]
+      },
+      crime: {
+        name: 'Crime & Safety Agent',
+        emoji: '🚔',
+        title: 'Explore Boston crime & safety data.',
+        desc: 'Analyse incidents by type, neighbourhood, district, and time. Powered by BPD open data.',
+        suggestions: [
+          'What are the top 5 crime types in Roxbury?',
+          'Compare crime rates between Back Bay and Dorchester',
+          'Are shooting incidents going up or down?',
+          'Which district has the most crime reports?',
+        ]
+      },
+      '311': {
+        name: '311 Service Requests Agent',
+        emoji: '📞',
+        title: 'Track resident complaints & city services.',
+        desc: 'Pothole reports, graffiti, missed trash, broken lights — understand what residents need most.',
+        suggestions: [
+          'What are the most common 311 complaint types?',
+          'Which neighbourhood has the most open service requests?',
+          'How long does it take to close a pothole report?',
+          'Are 311 complaints going up or down this year?',
+        ]
+      },
+      housing: {
+        name: 'Housing & Property Agent',
+        emoji: '🏠',
+        title: 'Analyse Boston\'s housing market.',
+        desc: 'Property assessments, building activity, neighbourhood values — data-driven housing insights.',
+        suggestions: [
+          'What are the 5 most expensive neighbourhoods?',
+          'Where are property values growing fastest?',
+          'How much has South End property value changed?',
+          'Show median assessed values by neighbourhood',
+        ]
+      },
+      transit: {
+        name: 'MBTA Transit Agent',
+        emoji: '🚇',
+        title: 'Explore MBTA transit data.',
+        desc: 'Ridership trends, service performance, and real-time MBTA data for Boston residents.',
+        suggestions: [
+          'What MBTA ridership data is available?',
+          'Which subway lines have the most riders?',
+          'Show transit usage trends over the past year',
+          'What service data is available for the Green Line?',
+        ]
+      },
+      permits: {
+        name: 'Building Permits Agent',
+        emoji: '🏗️',
+        title: 'Track Boston construction activity.',
+        desc: 'Building permits by type, location, and value — understand what\'s being built in your neighbourhood.',
+        suggestions: [
+          "What's being built in the Seaport district?",
+          'Which ZIP codes have the most permits issued?',
+          'Show the largest construction projects by value',
+          'What types of permits are most common?',
+        ]
+      }
+    };
+
+    function selectAgent(btn) {
+      document.querySelectorAll('.agent-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentAgent = btn.dataset.agent;
+      updateHero();
+    }
+
+    function updateHero() {
+      const meta = agentMeta[currentAgent];
+      document.getElementById('hero-emoji').textContent = meta.emoji;
+      document.getElementById('hero-agent-name').textContent = meta.name;
+      document.getElementById('hero-title').textContent = meta.title;
+      document.getElementById('hero-desc').textContent = meta.desc;
+      document.getElementById('footer-agent-name').textContent = meta.name;
+
+      const grid = document.getElementById('suggestions-grid');
+      grid.innerHTML = '';
+      meta.suggestions.forEach(s => {
+        const chip = document.createElement('button');
+        chip.className = 'suggestion-chip';
+        chip.textContent = s;
+        chip.onclick = () => {
+          document.getElementById('question-input').value = s;
+          sendMessage();
+        };
+        grid.appendChild(chip);
+      });
+    }
+
+    function appendUserMsg(text) {
+      hideEmpty();
+      const div = document.createElement('div');
+      div.className = 'message msg-user';
+      div.innerHTML = `<div class="msg-user-bubble">${escHtml(text)}</div>`;
+      document.getElementById('chat-area').appendChild(div);
+      scrollBottom();
+    }
+
+    function createThinkingRow() {
+      hideEmpty();
+      const meta = agentMeta[currentAgent];
+      const row = document.createElement('div');
+      row.className = 'thinking-row';
+      row.id = 'thinking-row';
+      row.innerHTML = `
+    <div class="agent-avatar">${meta.emoji}</div>
+    <div class="thinking-bubble">
+      <div class="thinking-header">
+        <div class="thinking-dots"><span></span><span></span><span></span></div>
+        Querying Boston open data...
+      </div>
+      <div class="tool-call-log" id="tool-log"></div>
+    </div>`;
+      document.getElementById('chat-area').appendChild(row);
+      scrollBottom();
+      return row;
+    }
+
+    function addToolCallItem(toolName, detail) {
+      const log = document.getElementById('tool-log');
+      if (!log) return null;
+      const item = document.createElement('div');
+      item.className = 'tool-call-item';
+      item.id = `tool-${Date.now()}`;
+      item.innerHTML = `
+    <span class="tool-icon">🔧</span>
+    <div>
+      <div class="tool-name">${toolName}</div>
+      <div class="tool-detail">${escHtml(detail || '')}</div>
+    </div>`;
+      log.appendChild(item);
+      scrollBottom();
+      return item.id;
+    }
+
+    function markToolDone(itemId) {
+      const el = document.getElementById(itemId);
+      if (el) {
+        el.classList.add('done');
+        el.querySelector('.tool-icon').textContent = '✓';
+        el.querySelector('.tool-icon').style.color = '#2ECC71';
+      }
+    }
+
+    function removeThinkingRow() {
+      const row = document.getElementById('thinking-row');
+      if (row) row.remove();
+    }
+
+    function appendAgentMsg(text) {
+      const meta = agentMeta[currentAgent];
+      const div = document.createElement('div');
+      div.className = 'message msg-agent';
+      div.innerHTML = `
+    <div class="agent-avatar">${meta.emoji}</div>
+    <div class="msg-agent-bubble">${formatAnswer(text)}</div>`;
+      document.getElementById('chat-area').appendChild(div);
+      scrollBottom();
+    }
+
+    function formatAnswer(text) {
+      return escHtml(text)
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/#{1,3} (.+)/g, '<h3>$1</h3>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function hideEmpty() {
+      const es = document.getElementById('empty-state');
+      if (es) es.style.display = 'none';
+    }
+
+    function scrollBottom() {
+      const ca = document.getElementById('chat-area');
+      ca.scrollTop = ca.scrollHeight;
+    }
+
+    async function sendMessage() {
+      if (isThinking) return;
+      const inp = document.getElementById('question-input');
+      const text = inp.value.trim();
+      if (!text) return;
+
+      inp.value = '';
+      inp.style.height = 'auto';
+      isThinking = true;
+      document.getElementById('send-btn').disabled = true;
+
+      appendUserMsg(text);
+      const thinkRow = createThinkingRow();
+      const toolItems = {};
+
+      try {
+        const res = await fetch(`${API_BASE}/query`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: text, agent_key: currentAgent })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (raw === '[DONE]') break;
+            try {
+              const evt = JSON.parse(raw);
+              if (evt.type === 'tool_call') {
+                const inputStr = Object.values(evt.input || {}).join(', ').slice(0, 60);
+                toolItems[evt.tool + Date.now()] = addToolCallItem(evt.tool, inputStr);
+              } else if (evt.type === 'tool_result') {
+                const keys = Object.keys(toolItems);
+                if (keys.length) markToolDone(toolItems[keys[keys.length - 1]]);
+              } else if (evt.type === 'answer') {
+                removeThinkingRow();
+                appendAgentMsg(evt.text);
+              } else if (evt.type === 'error') {
+                removeThinkingRow();
+                appendAgentMsg('⚠️ ' + evt.text);
+              }
+            } catch (_) { }
+          }
+        }
+      } catch (err) {
+        removeThinkingRow();
+        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          document.getElementById('setup-banner').style.display = 'block';
+          appendAgentMsg('⚠️ Cannot reach the web server at localhost:8000.\n\nTo use the full browser UI:\n1. Run: python web_server.py\n2. Refresh this page\n\nOr use the terminal: python boston_agents.py');
+        } else {
+          appendAgentMsg(`⚠️ Error: ${err.message}`);
+        }
+      }
+
+      isThinking = false;
+      document.getElementById('send-btn').disabled = false;
+      inp.focus();
+    }
+
+    // Auto-resize textarea
+    document.getElementById('question-input').addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Enter key handling
+    document.getElementById('question-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Init
+    updateHero();
+  </script>
+</body>
+
+</html>
