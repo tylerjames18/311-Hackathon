@@ -263,7 +263,7 @@ function send() {
   es.onerror = () => {
     if (!hasResult) {
       agentBody.innerHTML =
-        `<span style="color:#dc2626">⚠️ Connection error — is ANTHROPIC_API_KEY set?</span>`;
+        `<span style="color:#dc2626">⚠️ Connection dropped. This agent runs heavy queries — try again. If it keeps failing, check that ANTHROPIC_API_KEY is set and the server is running.</span>`;
     }
     es.close();
     sendBtn.disabled = false;
@@ -321,7 +321,11 @@ def stream():
 
     def generate():
         while True:
-            item = event_queue.get()
+            try:
+                item = event_queue.get(timeout=20)
+            except queue.Empty:
+                yield ": ping\n\n"  # keepalive — prevents browser dropping the connection
+                continue
             if item is None:
                 yield 'data: {"type":"done"}\n\n'
                 break
