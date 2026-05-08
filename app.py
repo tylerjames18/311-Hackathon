@@ -343,4 +343,4 @@ if __name__ == "__main__":
     print("   Open: http://localhost:5000\n")
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("⚠️  ANTHROPIC_API_KEY not set — set it before sending queries\n")
-    app.run(host="0.0.0.0", port=5000, threaded=True, debug=False)
+    app.run(host="0.0.0.0", port=5001, threaded=True, debug=False)
